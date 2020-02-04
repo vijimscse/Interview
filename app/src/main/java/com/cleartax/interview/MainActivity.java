@@ -1,6 +1,7 @@
 package com.cleartax.interview;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +25,11 @@ public class MainActivity extends AppCompatActivity {
         editText = findViewById(R.id.editText);
         wordCount = findViewById(R.id.word_count);
         undo = findViewById(R.id.undo);
+
+        if (savedInstanceState != null) {
+            wordList = savedInstanceState.getStringArrayList("parcelable");
+            setUiState();
+        }
         findViewById(R.id.full_window).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -38,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                 editText.requestFocus();
             }
         });
-        undo.setEnabled(false);
+
         editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -60,18 +66,22 @@ public class MainActivity extends AppCompatActivity {
                     wordList.remove(wordList.size() - 1);
                 }
 
-                if (!wordList.isEmpty()) {
-                    final String text = wordList.get(wordList.size() - 1);
-                    editText.setText(text);
-                    String[] words = text.split(" ");
-                    wordCount.setText(words.length + " words");
-                } else {
-                    editText.setText("");
-                    wordCount.setText("0 words");
-                }
-                undo.setEnabled(!wordList.isEmpty());
+                setUiState();
             }
         });
+    }
+
+    private void setUiState() {
+        if (!wordList.isEmpty()) {
+            final String text = wordList.get(wordList.size() - 1);
+            editText.setText(text);
+            String[] words = text.split(" ");
+            wordCount.setText(words.length + " words");
+        } else {
+            editText.setText("");
+            wordCount.setText("0 words");
+        }
+        undo.setEnabled(!wordList.isEmpty());
     }
 
     @Override
@@ -80,9 +90,9 @@ public class MainActivity extends AppCompatActivity {
         outState.putStringArrayList("parcelable", wordList);
     }
 
-    @Override
+    /*@Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         wordList = savedInstanceState.getStringArrayList("parcelable");
-    }
+    }*/
 }

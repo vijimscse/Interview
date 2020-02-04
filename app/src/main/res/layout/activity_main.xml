@@ -27,6 +27,7 @@
         android:id="@+id/word_count"/>
 
     <Button
+        android:enabled="false"
         android:id="@+id/undo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
